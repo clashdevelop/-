@@ -12,7 +12,7 @@ function systemUpdate(time,receiveTime){
 
 	}
 	//小球运动,参数为目标位置和规定时间
-	var perLength = 0.1;
+	var perLength = 0.02;
 	var radox = Math.random() * perLength;
 	var radoy = Math.random() * perLength;
 	var ballPosi = aBall.position;

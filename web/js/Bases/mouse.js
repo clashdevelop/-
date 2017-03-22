@@ -30,6 +30,7 @@ function mouse(){
 	this.ballRadius = 4;
 	//鼠标角度
 	this.mouseAngle = 0;
+	this.perAngel = 57.5;
 	//绘制线条位置points
 	this.drawPoints = [
 						[
@@ -77,21 +78,20 @@ mouse.prototype.setCenter = function(position) {
 mouse.prototype.initPosition = function() {
 	this.mouse_x = x;
 	this.mouse_y = -y;
-
 	//获得与y轴正方向的逆时针方向的角度
 	if(this.mouse_x < 0){
 		if(this.mouse_y > 0){
-			this.mouseAngle = -Math.atan(this.mouse_x / this.mouse_y) * 57.5;
+			this.mouseAngle = -Math.atan(this.mouse_x / this.mouse_y) * this.perAngel;
 		}else if(this.mouse_y < 0){
-			this.mouseAngle = (90 + Math.atan(this.mouse_y / this.mouse_x) * 57.5);
+			this.mouseAngle = (90 + Math.atan(this.mouse_y / this.mouse_x) * this.perAngel);
 		}else if(this.mouse_y == 0){
 			this.mouseAngle = 90;
 		}
 	}else if(this.mouse_x > 0){
 		if(this.mouse_y < 0){
-			this.mouseAngle = (180 - Math.atan(this.mouse_x / this.mouse_y) * 57.5);
+			this.mouseAngle = (180 - Math.atan(this.mouse_x / this.mouse_y) * this.perAngel);
 		}else if(this.mouse_y > 0){
-			this.mouseAngle = (270 + Math.atan(this.mouse_y / this.mouse_x) * 57.5);
+			this.mouseAngle = (270 + Math.atan(this.mouse_y / this.mouse_x) * this.perAngel);
 		}else if(this.mouse_y == 0){
 			this.mouseAngle = 270;
 		}
