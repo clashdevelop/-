@@ -6,18 +6,21 @@
 
 		规定时间为	i = 100?
 */
-function systemUpdate(time,topTime){
-	if(time >= topTime){
-		var radox = Math.random() * 0.3;
-		var radoy = Math.random() * 0.3;
-		//小球运动,参数为目标位置和规定时间
-		var ballPosi = aBall.position;
-		ballPosi.x += radox;
-		ballPosi.y += radox;
-		aBall.doUpdate(new position(ballPosi.x,ballPosi.y,0),time,topTime);
+function systemUpdate(time,receiveTime){
+	if(time >= receiveTime){
+		//通过网络获取position
+
 	}
+	//小球运动,参数为目标位置和规定时间
+	var perLength = 0.1;
+	var radox = Math.random() * perLength;
+	var radoy = Math.random() * perLength;
+	var ballPosi = aBall.position;
+	ballPosi.x += perLength;
+	ballPosi.y += perLength;
+	aBall.doUpdate(new position(ballPosi.x,ballPosi.y,0));
     //及时更改鼠标中心，将小球的位置传入
     myMouse.doUpdate(aBall.position);
 
-    return time>=topTime?0:++time;
+    return time>=receiveTime?0:++time;
 }

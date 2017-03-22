@@ -8,12 +8,12 @@ renderer.shadowMapEnabled = true;
 var aBall = new ball();
 aBall.draw(scene);
 
-var floorTex = THREE.ImageUtils.loadTexture("../assets/textures/general/floor-wood.jpg");
-var plane = new THREE.Mesh(new THREE.BoxGeometry(200, 100, -1, -0.9), new THREE.MeshPhongMaterial({
-    color: 0x3c3c3c,
-    map: floorTex
-}));
-scene.add(plane);
+// var floorTex = THREE.ImageUtils.loadTexture("../assets/textures/general/floor-wood.jpg");
+// var plane = new THREE.Mesh(new THREE.BoxGeometry(200, 100, -1, -0.9), new THREE.MeshPhongMaterial({
+//     color: 0x3c3c3c,
+//     map: floorTex
+// }));
+// scene.add(plane);
 
 //添加鼠标的直线
 var myMouse = new mouse();
@@ -31,9 +31,9 @@ center.setRadius(2);
 center.draw(scene);*/
 
 //添加灯光
-var spotLight = new THREE.SpotLight(0xffffff);
-spotLight.position.set(30, 30, 40);
-spotLight.castShadow = true;
+var spotLight = new THREE.DirectionalLight(0xffffff);
+spotLight.position.set(-40, 60, 100);
+// spotLight.castShadow = true;
 scene.add(spotLight);
 
 // add the output of the renderer to the html element
@@ -43,11 +43,11 @@ Camera.setLookAt(aBall.getPosition());
 
 //定义计时器
 var time = 0;
-//规定每次接收消息 以及 到达目标位置所需时间
-var topTime = 10;
+//规定每次接收位置消息
+var receiveTime = 1;
 function renderScene() {
 	//引入系统更新方法
-    time = systemUpdate(time,topTime);//Control/updateControl.js
+    time = systemUpdate(time,receiveTime);//Control/updateControl.js
     Camera.setPosition(aBall.getPosition());
     // render using requestAnimationFrame
     requestAnimationFrame(renderScene);

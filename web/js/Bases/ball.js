@@ -18,49 +18,19 @@ function ball(){
     ball.prototype = new Super();
 })();
 //小球位置更新，参数为目标位置和规定时间
-ball.prototype.doUpdate = function(position,tiem,topTime) {
-    //move test one
-    // this.position.x += 0.02;
-    // this.core.position.x = this.position.x;
-    // this.core.position.y = this.position.y;
-    // this.core.position.z = this.position.z;
-    // this.core.rotation.y += 0.01;
+ball.prototype.doUpdate = function(position) {
 
-    //move test two
-    // var time = 0;
-    // var leaseTime = 0;
-    // for(;time<leaseTime;time++){
-    //     leaseTime = topTime - time;
-    //     var targX = (position.x - this.position.x) / leaseTime;
-    //     var targY = (position.y - this.position.y) / leaseTime;
-    //     var targZ = (position.z - this.position.z) / leaseTime;
-    //     this.position.x += targX;
-    //     this.position.y += targY;
-    //     this.position.z += targZ;
-    //     this.core.position.x = this.position.x;
-    //     this.core.position.y = this.position.y;
-    //     this.core.position.z = this.position.z;
-    // }
-
-    //move test three
     console.log("do move ");
-    // var avageTargX = (position.x - this.position.x) / topTime;
-    // var avageTargY = (position.y - this.position.y) / topTime;
-    // var avageTargZ = (position.z - this.position.z) / topTime;    
-    // this.position.x += avageTargX;
-    // this.position.y += avageTargY;
-    // this.position.z += avageTargZ;
-    // this.core.position.x = this.position.x;
-    // this.core.position.y = this.position.y;
-    // this.core.position.z = this.position.z;
-
-    //move test four
-    this.position.x += 0.02;
-    this.position.y += 0.02;
-    this.position.z += 0.02;
+    this.position.x = position.x;
+    this.position.y = position.y;
+    this.position.z = position.z;
     this.core.position.x = this.position.x;
     this.core.position.y = this.position.y;
     this.core.position.z = this.position.z;
+
+    this.core.rotation.x = this.position.y;
+    this.core.rotation.y = this.position.y;
+    this.core.rotation.z = this.position.z;
 };
 //get / set
 ball.prototype.getPosition = function() {
