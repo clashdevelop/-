@@ -16,7 +16,7 @@ camera.prototype.getCamera = function() {
                     ,0.1,1000);
     this.Camera.position.x = this.position.getX();
     this.Camera.position.y = this.position.getY();
-    this.Camera.position.z = this.position.getZ();
+    this.Camera.position.z = this.height;
     this.Camera.lookAt(this.lookAtPosition);
     return this.Camera;
 };
