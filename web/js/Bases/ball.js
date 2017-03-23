@@ -54,6 +54,7 @@ ball.prototype.setRadius = function(radius) {
 ball.prototype.setNextPosition = function(position) {
     this.nextPosition = position;
 };
+
 //添加到scene
 ball.prototype.draw = function(scene) {
     this.geometry = new THREE.SphereGeometry(this.radius, 40, 40);
