@@ -7,9 +7,10 @@
 		规定时间为	i = 100?
 */
 function systemUpdate(time,receiveTime){
+	var newPosi = new position(0,0,0);
 	if(time >= receiveTime){
 		//通过网络获取position
-
+		
 	}
 	//小球运动,参数为目标位置和规定时间
 	var perLength = 0.02;
