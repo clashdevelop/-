@@ -1,10 +1,7 @@
 var ws;
-function doConnect(){
-	var linkString = "ws://115.159.212.28:8888/testWebsocket";
-	var userName = "Jack";
-	ws = new WebSocket(linkString);
-}
-//
-ws.onMessage() = function(evt){
-	alert(evt.data);
+var linkString = "ws://115.159.212.28:8888/testWebsocket";
+ws = new WebSocket(linkString,"123");
+
+ws.onmessage() = function(evt){
+	console.log(evt.data);
 }
