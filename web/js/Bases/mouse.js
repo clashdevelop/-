@@ -18,6 +18,15 @@ function mouseMove(ev) {
 	x = mousePos.pos_x - document.body.clientWidth / 2;
 	y = mousePos.pos_y - document.body.clientHeight / 2;
 	// myMouse.initPosition();
+	var mouseJson = {
+		'x':x,
+		'y':-y
+	}
+	var sendMessage = {
+		'type':'mouse',
+		'content':mouseJson
+	}
+	websocket.send(JSON.stringify(sendMessage));
 }
 //mouse类
 function mouse(){
