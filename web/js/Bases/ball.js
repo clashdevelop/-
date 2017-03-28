@@ -19,18 +19,19 @@ function ball(){
 })();
 //小球位置更新，参数为目标位置和规定时间
 ball.prototype.doUpdate = function(position) {
-
-    console.log("do move ");
-    this.position.x = position.x;
-    this.position.y = position.y;
-    this.position.z = position.z;
-    this.core.position.x = this.position.x;
-    this.core.position.y = this.position.y;
-    this.core.position.z = this.position.z;
-    var perRotation = 0.3;
-    //网上找出的 矩阵旋转方案：http://stackoverflow.com/questions/11060734/how-to-rotate-a-3d-object-on-axis-three-js
-    var xAxis = new THREE.Vector3(-1,1,0);
-    rotateAroundWorldAxis(this.core,xAxis,Math.PI / 360);
+    if(this.position != position){
+        console.log("do move ");
+        this.position.x = position.x;
+        this.position.y = position.y;
+        this.position.z = position.z;
+        this.core.position.x = this.position.x;
+        this.core.position.y = this.position.y;
+        this.core.position.z = this.position.z;
+        var perRotation = 0.3;
+        //网上找出的 矩阵旋转方案：http://stackoverflow.com/questions/11060734/how-to-rotate-a-3d-object-on-axis-three-js
+        var xAxis = new THREE.Vector3(-1,1,0);
+        rotateAroundWorldAxis(this.core,xAxis,Math.PI / 360);
+    }
 
 };
 //get / set
@@ -53,6 +54,7 @@ ball.prototype.setRadius = function(radius) {
 ball.prototype.setNextPosition = function(position) {
     this.nextPosition = position;
 };
+
 //添加到scene
 ball.prototype.draw = function(scene) {
     this.geometry = new THREE.SphereGeometry(this.radius, 40, 40);

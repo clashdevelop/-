@@ -12,3 +12,17 @@ position.prototype.getY = function() {
 position.prototype.getZ = function() {
     return this.z;
 };
+position.prototype.setX = function(x) {
+	this.x = x;
+};
+position.prototype.setY = function(y) {
+	this.y = y;
+};
+position.prototype.setZ = function(z) {
+	this.z = z
+};
+position.prototype.setAll = function(x,y,z) {
+	this.x = x;
+	this.y = y;
+	this.z = z;
+};
