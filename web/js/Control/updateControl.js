@@ -1,16 +1,8 @@
 /*
-	系统更新方法：
-		规定计时器	i = 0
-		规定时间内对服务器内容进行位置等请求
-		请求成功后，规定时间内对小球的位置进行移动
-
-		规定时间为	i = 100?
+	
 */
 function systemUpdate(time,receiveTime){
-	if(time >= receiveTime){
-		//通过网络获取position
-		
-	}
+
 	//小球运动,参数为目标位置和规定时间
 	var perLength = 0.02;
 	var radox = Math.random() * perLength;

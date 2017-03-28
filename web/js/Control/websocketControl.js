@@ -1,6 +1,8 @@
 var websocket;
+//新接受消息
+
 function doConnect(){
-	var linkString = "ws://127.0.0.1:8080/Clash/clash";
+	var linkString = "ws://localhost:8080/Clash/clash";
 	websocket = new WebSocket(linkString);
 }
 doConnect();
@@ -10,6 +12,7 @@ websocket.onopen = function(){
 websocket.onmessage = function(event){
 	//sendMessage(event.data);
 	console.log(event.data);
+	var getJson = event.data;
 }
 websocket.onerror = function(){
 	sendMessage("Error");
