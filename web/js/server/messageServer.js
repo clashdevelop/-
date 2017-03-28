@@ -6,5 +6,5 @@ var allBallJson = {
 }
 function messageHandle(data){
 	var jsonMessage = eval('(' + data + ')');
-	switch()
+	// switch()
 }
