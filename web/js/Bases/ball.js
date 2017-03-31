@@ -1,11 +1,11 @@
 function ball(){
     drawBase.call(this);
 
-    this.id = "";
+    this.id = "0";
     this.name = "";
     this.color = "";
     this.position = new position(0,0,0);//当前position
-    this.nextPosition ;
+    this.nextPosition = new position(0,0,0);
     this.lastPosition = new position(0,0,0);
     this.radius = 4;
     //加的力
@@ -17,13 +17,19 @@ function ball(){
     Super.prototype = drawBase.prototype;
     ball.prototype = new Super();
 })();
-//小球位置更新，参数为目标位置和规定时间
-ball.prototype.doUpdate = function(position) {
-    if(this.position != position){
+//小球位置更新，不传递参数，通过自身的 nextposition 更改
+//小球的新position来自messageServer的新消息
+ball.prototype.doUpdate = function() {
+    this.moveToNext();
+};
+//运动方式1：向next position运动
+ball.prototype.moveToNext = function() {
+    //同步本地next position
+    if(this.position != this.nextPosition){
         console.log("do move ");
-        this.position.x = position.x;
-        this.position.y = position.y;
-        this.position.z = position.z;
+        this.position.x = this.nextPosition.x;
+        this.position.y = this.nextPosition.y;
+        this.position.z = this.nextPosition.z;
         this.core.position.x = this.position.x;
         this.core.position.y = this.position.y;
         this.core.position.z = this.position.z;
@@ -32,7 +38,6 @@ ball.prototype.doUpdate = function(position) {
         var xAxis = new THREE.Vector3(-1,1,0);
         rotateAroundWorldAxis(this.core,xAxis,Math.PI / 360);
     }
-
 };
 //get / set
 ball.prototype.getPosition = function() {
@@ -50,11 +55,21 @@ ball.prototype.setPower = function(power) {
 ball.prototype.setRadius = function(radius) {
     this.radius = radius;
 };
+ball.prototype.getId = function() {
+    return this.id;
+};
+
 //更新服务器接收位置
 ball.prototype.setNextPosition = function(position) {
     this.nextPosition = position;
 };
-
+ball.prototype.setNextPositionByJson = function(json) {
+    this.nextPosition.x = json.x;
+    this.nextPosition.y = json.y;
+};
+ball.prototype.getNextPosition = function() {
+    return this.nextPosition;
+};
 //添加到scene
 ball.prototype.draw = function(scene) {
     this.geometry = new THREE.SphereGeometry(this.radius, 40, 40);

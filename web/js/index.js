@@ -5,8 +5,12 @@ renderer.setSize(window.innerWidth, window.innerHeight);
 renderer.shadowMapEnabled = true;
 
 //添加球体
-var aBall = new ball();
-aBall.draw(scene);
+// var aBall = new ball();
+// aBall.draw(scene);
+// console.log(Balls);
+for(var index_Balls = 0;index_Balls < Balls.length;index_Balls++){
+	Balls[index_Balls].draw(scene);
+}
 
 // var floorTex = THREE.ImageUtils.loadTexture("../assets/textures/general/floor-wood.jpg");
 // var plane = new THREE.Mesh(new THREE.BoxGeometry(200, 100, -1, -0.9), new THREE.MeshPhongMaterial({

@@ -10,9 +10,8 @@ websocket.onopen = function(){
 	console.log("Success");
 }
 websocket.onmessage = function(event){
-	//sendMessage(event.data);
-	console.log(event.data);
-	var getJson = event.data;
+	messageHandle(event.data);
+	// console.log(event.data);
 }
 websocket.onerror = function(){
 	sendMessage("Error");
