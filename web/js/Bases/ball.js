@@ -26,7 +26,7 @@ ball.prototype.doUpdate = function() {
 ball.prototype.moveToNext = function() {
     //同步本地next position
     if(this.position != this.nextPosition){
-        console.log("do move ");
+        // console.log("do move ");
         this.position.x = this.nextPosition.x;
         this.position.y = this.nextPosition.y;
         this.position.z = this.nextPosition.z;

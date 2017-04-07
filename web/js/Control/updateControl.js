@@ -3,33 +3,31 @@
 */
 function systemUpdate(time,receiveTime){
 
-	//小球运动,参数为目标位置和规定时间
-	// var perLength = 0.02;
-	// var radox = Math.random() * perLength;
-	// var radoy = Math.random() * perLength;
-	// var ballPosi = aBall.position;
-	// ballPosi.x += perLength;
-	// ballPosi.y += perLength;
-	//测试用小球更新
-	// aBall.doUpdate();
+	mouse_time++;
+	sendMousePosition();
 	ballUpdate();
     //及时更改鼠标中心，将小球的位置传入
-    myMouse.doUpdate(aBall.position);
+    myMouse.doUpdate(my_ball.position);
 
     return time>=receiveTime?0:++time;
 }
-//小球更新控制方法
-//使用 allBallJson
+
+/*
+	小球更新控制方法
+	使用 allBallJson
+*/
 function ballUpdate(){
 	//更新每个小球的 nextposition
 	if(Array.isArray(allBallJson)){
 		for(var oneBall in allBallJson){
-			// console.log(allBallJson[oneBall]);
-
+			console.log(allBallJson[oneBall]);
 		}
+		//当前版本：如果为多人，只更新aBall
+		Balls[0].setNextPosition(new position(allBallJson[0].x,allBallJson[0].y,0));
 	}else{
-		// console.log(allBallJson.id);
+		console.log(allBallJson);
 		Balls[0].setNextPosition(new position(allBallJson.x,allBallJson.y,0));
+
 	}
 	// console.log(allBallJson);
 	//调用更新方法
@@ -43,4 +41,54 @@ function getIndexById(id){
 
 		}
 	}
+}
+//鼠标更新事件
+document.onmousemove = mouseMove;
+function mousePosition(ev){
+	if(ev.pageX || ev.pageY){
+		return {pos_x:ev.pageX, pos_y:ev.pageY};
+	}
+	return {
+		pos_x:ev.clientX + document.body.scrollLeft - document.body.clientLeft,
+		pos_y:ev.clientY + document.body.scrollTop - document.body.clientTop
+	};
+}
+function mouseMove(ev) {
+	ev = ev || window.event;
+	var mousePos = mousePosition(ev);
+	//获得中心点
+	x = mousePos.pos_x - document.body.clientWidth / 2;
+	y = mousePos.pos_y - document.body.clientHeight / 2;
+
+	// var mouseJson = {
+	// 	'x':x,
+	// 	'y':-y
+	// }
+	// var sendMessage = {
+	// 	'type':'mouse',
+	// 	'content':mouseJson
+	// }
+	// if(mouse_time >= 10){
+	// 	// websocket.send(JSON.stringify(sendMessage));
+	// 	mouse_time = 0;
+	// }
+
+	// websocket.send(JSON.stringify(sendMessage));
+
+	// console.log(JSON.stringify(sendMessage));
+}
+function sendMousePosition(){
+	var mouseJson = {
+		'x':x,
+		'y':-y
+	}
+	var sendMessage = {
+		'type':'mouse',
+		'content':mouseJson
+	}
+	if(mouse_time >= 5){
+		websocket.send(JSON.stringify(sendMessage));
+		mouse_time = 0;
+	}
+	// websocket.send(JSON.stringify(sendMessage));
 }

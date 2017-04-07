@@ -1,6 +1,3 @@
-var websocket;
-//新接受消息
-
 function doConnect(){
 	var linkString = "ws://localhost:8080/Clash/clash";
 	websocket = new WebSocket(linkString);
@@ -11,7 +8,6 @@ websocket.onopen = function(){
 }
 websocket.onmessage = function(event){
 	messageHandle(event.data);
-	// console.log(event.data);
 }
 websocket.onerror = function(){
 	sendMessage("Error");
@@ -19,3 +15,7 @@ websocket.onerror = function(){
 websocket.onclose = function(){
 	sendMessage("Close");
 }
+//窗口关闭前调用
+// window.onbeforeunload = function(){
+// 	websocket.close();
+// }

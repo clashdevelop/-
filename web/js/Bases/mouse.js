@@ -1,33 +1,34 @@
 //绑定事件
-var x = 0;
-var y = 0;
-document.onmousemove = mouseMove;
-function mousePosition(ev){
-	if(ev.pageX || ev.pageY){
-		return {pos_x:ev.pageX, pos_y:ev.pageY};
-	}
-	return {
-		pos_x:ev.clientX + document.body.scrollLeft - document.body.clientLeft,
-		pos_y:ev.clientY + document.body.scrollTop - document.body.clientTop
-	};
-}
-function mouseMove(ev) {
-	ev = ev || window.event;
-	var mousePos = mousePosition(ev);
-	//获得中心点
-	x = mousePos.pos_x - document.body.clientWidth / 2;
-	y = mousePos.pos_y - document.body.clientHeight / 2;
-	// myMouse.initPosition();
-	var mouseJson = {
-		'x':x,
-		'y':-y
-	}
-	var sendMessage = {
-		'type':'mouse',
-		'content':mouseJson
-	}
-	websocket.send(JSON.stringify(sendMessage));
-}
+// var x = 0;
+// var y = 0;
+// document.onmousemove = mouseMove;
+// function mousePosition(ev){
+// 	if(ev.pageX || ev.pageY){
+// 		return {pos_x:ev.pageX, pos_y:ev.pageY};
+// 	}
+// 	return {
+// 		pos_x:ev.clientX + document.body.scrollLeft - document.body.clientLeft,
+// 		pos_y:ev.clientY + document.body.scrollTop - document.body.clientTop
+// 	};
+// }
+// function mouseMove(ev) {
+// 	ev = ev || window.event;
+// 	var mousePos = mousePosition(ev);
+// 	//获得中心点
+// 	x = mousePos.pos_x - document.body.clientWidth / 2;
+// 	y = mousePos.pos_y - document.body.clientHeight / 2;
+// 	// myMouse.initPosition();
+// 	var mouseJson = {
+// 		'x':x,
+// 		'y':-y
+// 	}
+// 	var sendMessage = {
+// 		'type':'mouse',
+// 		'content':mouseJson
+// 	}
+// 	websocket.send(JSON.stringify(sendMessage));
+// 	console.log(JSON.stringify(sendMessage));
+// }
 //mouse类
 function mouse(){
     drawBase.call(this);
