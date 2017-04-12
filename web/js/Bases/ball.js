@@ -10,7 +10,8 @@ function ball(){
     this.radius = 4;
     //加的力
     this.power = 0;
-
+    //用于对比是否为新加入或退出
+    this.flag = 0;
 }
 (function(){
     var Super = function(){};
@@ -45,6 +46,10 @@ ball.prototype.getPosition = function() {
 };
 ball.prototype.setPosition = function(position) {
     this.position = position;
+    //初始化core.position
+    this.core.position.x = position.getX();
+    this.core.position.y = position.getY();
+    this.core.position.z = position.getZ();
 };
 ball.prototype.getPower = function() {
     return this.power;
@@ -57,6 +62,9 @@ ball.prototype.setRadius = function(radius) {
 };
 ball.prototype.getId = function() {
     return this.id;
+};
+ball.prototype.setId = function(id) {
+    this.id = id;
 };
 
 //更新服务器接收位置

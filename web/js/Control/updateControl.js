@@ -6,6 +6,8 @@ function systemUpdate(time,receiveTime){
 	mouse_time++;
 	sendMousePosition();
 	ballUpdate();
+	Camera.setLookAt(my_ball.getPosition());
+    Camera.setPosition(my_ball.getPosition());
     //及时更改鼠标中心，将小球的位置传入
     myMouse.doUpdate(my_ball.position);
 
@@ -17,30 +19,36 @@ function systemUpdate(time,receiveTime){
 	使用 allBallJson
 */
 function ballUpdate(){
-	//更新每个小球的 nextposition
-	if(Array.isArray(allBallJson)){
-		for(var oneBall in allBallJson){
-			console.log(allBallJson[oneBall]);
-		}
-		//当前版本：如果为多人，只更新aBall
-		Balls[0].setNextPosition(new position(allBallJson[0].x,allBallJson[0].y,0));
-	}else{
-		console.log(allBallJson);
-		Balls[0].setNextPosition(new position(allBallJson.x,allBallJson.y,0));
 
-	}
-	// console.log(allBallJson);
+	//更新每个小球的 nextposition
+	// if(Array.isArray(allBallJson)){
+	// 	for(var oneBallJson in allBallJson){
+	// 		//获取数据包中ID号对应的小球下标
+	// 		for(var oneBall in Balls){
+	// 			if(Balls[oneBall].getId() == ""+allBallJson[oneBallJson].id){
+	// 				console.log("get in");
+	// 				Balls[oneBall].setNextPosition(new position(allBallJson[oneBallJson].x,allBallJson[oneBallJson].y,0));
+	// 			}
+	// 		}
+	// 		// getBallById(allBallJson[oneBallJson].id).setNextPosition(new position(allBallJson[oneBallJson].x,allBallJson[oneBallJson].y,0));
+	// 	}
+	// }else{
+	// 	Balls[0].setNextPosition(new position(allBallJson.x,allBallJson.y,0));
+	// }
+	// console.log( JSON.stringify(allBallJson));
 	//调用更新方法
 	for(var i = 0;i < Balls.length;i++){
 		Balls[i].doUpdate();
 	}
 }
-function getIndexById(id){
-	for(var index in Balls){
-		if(Balls[index].getId() == 0){
-
+function getBallById(id){
+	var resBall ;
+	for(var oneBall in Balls){
+		if(Balls[oneBall].getId() == id){
+			resBall = Balls[oneBall];
 		}
 	}
+	return resBall;
 }
 //鼠标更新事件
 document.onmousemove = mouseMove;
@@ -90,5 +98,5 @@ function sendMousePosition(){
 		websocket.send(JSON.stringify(sendMessage));
 		mouse_time = 0;
 	}
-	// websocket.send(JSON.stringify(sendMessage));
+	//websocket.send(JSON.stringify(sendMessage));
 }

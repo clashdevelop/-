@@ -6,7 +6,7 @@ function drawBase(){
     this.core;
     this.geometry;
     this.meterial;
-}
+};
 drawBase.prototype.setPosition = function(position) {
     this.position = position;
 };
@@ -15,7 +15,7 @@ drawBase.prototype.getCore = function() {
 };
 drawBase.prototype.getPosition = function(){
     return this.position;
-}
+};
 drawBase.prototype.createMesh = function(geom, imageFile) {
     var loader = new THREE.DDSLoader();
     var texture = loader.load('../assets/textures/seafloor.dds');
