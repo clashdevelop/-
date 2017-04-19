@@ -69,49 +69,57 @@ function changeAllBallNextPosition(){
 					Balls[oneBall].flag = 1;
 					allBallJson[oneBallJson].flag = 1;
 
-					//判断本地小球
-					if(my_id==Balls[oneBall].getId()) my_ball=Balls[oneBall];
-
 					Balls[oneBall].setNextPosition(new position(allBallJson[oneBallJson].x,allBallJson[oneBallJson].y,0));
 				}
 			}
 			// getBallById(allBallJson[oneBallJson].id).setNextPosition(new position(allBallJson[oneBallJson].x,allBallJson[oneBallJson].y,0));
 		}
+		//判断玩家退出事件
+		for(var oneBall in Balls){
+			var i = oneBall;
+			if(Balls[i].flag == 0){
+				//玩家退出
+				// for(var i = oneBall;i < Balls.length-1;i++){
+				// 	Balls[i] = Balls[i+1];
+				// }
+				// Balls.length -= 1;
+				console.log("remove ball " + Balls[i].id);
+				scene.remove(Balls[i].core);
+			}
+		}
 		//判断新玩家的加入
 		for(var oneBallJson in allBallJson){
 			if(allBallJson[oneBallJson].flag == 0){
+				console.log("add ball " + allBallJson[oneBallJson].id);
 				//加入玩家
 				var new_ball = new ball();
 				new_ball.setRadius(5);
 				// my_ball = new_ball;
 				addNewBall(new_ball,allBallJson[oneBallJson].id);
-				//判断是否为自己
-				// if(my_id==allBallJson[oneBallJson].id) my_ball=new_ball;
-				//系统更新
-        		// time = systemUpdate(time,receiveTime);//Control/updateControl.js
 			}
 		}
-		for(var oneBall in Balls){
-			if(Balls[oneBall].flag == 0){
-				//玩家退出
-				//scene.remove(Balls[oneBall]);
-				for(var i = oneBall;i< Balls.length;i++){
-
-				}
-			}
-		}
+		
 	}else{
 		if(Balls.length == 0){
 			var new_ball = new ball();
 			new_ball.setRadius(5);
-			my_ball = new_ball;
+			// my_ball = new_ball;
 			addNewBall(new_ball,allBallJson.id);
 			renderScene();
 		}else{
 			Balls[0].setNextPosition(new position(allBallJson.x,allBallJson.y,0));
 		}
 	}
-	console.log(JSON.stringify(allBallJson));
+	//判断本地小球
+	if(my_ball == null  || my_ball == undefined || my_ball == ''){
+		for(var oneBall in Balls){
+			if(my_id==Balls[oneBall].getId()){
+				my_ball=Balls[oneBall];
+				renderScene();
+			}
+		}
+	}
+	// console.log(JSON.stringify(allBallJson));
 }
 function getJsonFStr(str){
 	var res = str;
@@ -122,4 +130,16 @@ function addNewBall(newball,id){
 	newball.setId(id);
 	newball.draw(scene);
 	Balls.push(newball);
+}
+function removeFBalls(array,index){
+	if(index<=(array.length-1)){ 
+		for(var i=index;i<array.length;i++){ 
+			array[i]=array[i+1]; 
+		} 
+	}
+	else{ 
+		throw new Error('超出最大索引！'); 
+	} 
+	array.length=array.length-1; 
+	return array; 
 }

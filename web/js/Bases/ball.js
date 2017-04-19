@@ -4,6 +4,11 @@ function ball(){
     this.id = "0";
     this.name = "";
     this.color = "";
+
+    //每个周期所需跳数
+    this.cycleTime = 70;
+    this.usedTime = 0;
+    //位置
     this.position = new position(0,0,0);//当前position
     this.nextPosition = new position(0,0,0);
     this.lastPosition = new position(0,0,0);
@@ -12,6 +17,14 @@ function ball(){
     this.power = 0;
     //用于对比是否为新加入或退出
     this.flag = 0;
+    //转速
+    this.perRotation = 0.3;
+    //作为旋转使用的K值
+    // this.rotaX = 1;
+    // this.rotaY = 1;
+    this.rotaXAY = {x:0.0,y:1.0};
+    this.xAxis;
+
 }
 (function(){
     var Super = function(){};
@@ -26,18 +39,20 @@ ball.prototype.doUpdate = function() {
 //运动方式1：向next position运动
 ball.prototype.moveToNext = function() {
     //同步本地next position
+    this.usedTime++;
+    var currectPosition = this.getCurrectTime();
+    console.log(currectPosition.x);
     if(this.position != this.nextPosition){
-        // console.log("do move ");
-        this.position.x = this.nextPosition.x;
-        this.position.y = this.nextPosition.y;
-        this.position.z = this.nextPosition.z;
+        
+        this.position.x = currectPosition.x;
+        this.position.y = currectPosition.y;
+        this.position.z = 0;
         this.core.position.x = this.position.x;
         this.core.position.y = this.position.y;
         this.core.position.z = this.position.z;
-        var perRotation = 0.3;
-        //网上找出的 矩阵旋转方案：http://stackoverflow.com/questions/11060734/how-to-rotate-a-3d-object-on-axis-three-js
-        var xAxis = new THREE.Vector3(-1,1,0);
-        rotateAroundWorldAxis(this.core,xAxis,Math.PI / 360);
+        //网上找出的 矩阵旋转方案：
+        //http://stackoverflow.com/questions/11060734/how-to-rotate-a-3d-object-on-axis-three-js
+        rotateAroundWorldAxis(this.core,this.xAxis,Math.PI / 360);
     }
 };
 //get / set
@@ -66,14 +81,22 @@ ball.prototype.getId = function() {
 ball.prototype.setId = function(id) {
     this.id = id;
 };
-
+ball.prototype.getCurrectTime = function() {
+    var x = (this.nextPosition.x - this.lastPosition.x)*this.usedTime/this.cycleTime + this.lastPosition.x;
+    var y = (this.nextPosition.y - this.lastPosition.y)*this.usedTime/this.cycleTime + this.lastPosition.y;
+    return {'x':x,'y':y}
+};
 //更新服务器接收位置
+//改变lastPosition的记录
+//外加更新小球旋转角度
+//重置周期使用时间
 ball.prototype.setNextPosition = function(position) {
     this.nextPosition = position;
-};
-ball.prototype.setNextPositionByJson = function(json) {
-    this.nextPosition.x = json.x;
-    this.nextPosition.y = json.y;
+    this.lastPosition = this.position;
+    this.rotaXAY = this.getRotateXAY(this.position,this.nextPosition);
+    this.xAxis = new THREE.Vector3(this.rotaXAY.x,this.rotaXAY.y,0);
+
+    this.usedTime = 0;
 };
 ball.prototype.getNextPosition = function() {
     return this.nextPosition;
@@ -129,4 +152,25 @@ function rotateAroundWorldAxis(object, axis, radians) {
     // object.rotation.setEulerFromRotationMatrix(object.matrix);
     // code for r59+:
     object.rotation.setFromRotationMatrix(object.matrix);
+}
+ball.prototype.getRotateXAY = function(fromPosition,toPosition){
+    //利用公式 y2=(x0-x1)*x2/(y1-y0)计算法向量，x2位
+    var fX = fromPosition.getX();
+    var fY = fromPosition.getY();
+    var tX = toPosition.getX();
+    var tY = toPosition.getY();
+    var x2 = 1;
+    var y2 = 0;
+    if((tY-fY) > 0){
+        x2 = -1;
+    }else{
+       x2 = 1;
+    }
+    if(tY == fY){
+        if((tX - fX) > 0) y2 = 1;
+        else y2 = -1;
+    }else{
+        y2 = (fX - tX)*x2*1.0/(tY - fY);
+    }
+    return {x:x2,y:y2}
 }

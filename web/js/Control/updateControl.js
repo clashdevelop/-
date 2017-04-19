@@ -19,24 +19,6 @@ function systemUpdate(time,receiveTime){
 	使用 allBallJson
 */
 function ballUpdate(){
-
-	//更新每个小球的 nextposition
-	// if(Array.isArray(allBallJson)){
-	// 	for(var oneBallJson in allBallJson){
-	// 		//获取数据包中ID号对应的小球下标
-	// 		for(var oneBall in Balls){
-	// 			if(Balls[oneBall].getId() == ""+allBallJson[oneBallJson].id){
-	// 				console.log("get in");
-	// 				Balls[oneBall].setNextPosition(new position(allBallJson[oneBallJson].x,allBallJson[oneBallJson].y,0));
-	// 			}
-	// 		}
-	// 		// getBallById(allBallJson[oneBallJson].id).setNextPosition(new position(allBallJson[oneBallJson].x,allBallJson[oneBallJson].y,0));
-	// 	}
-	// }else{
-	// 	Balls[0].setNextPosition(new position(allBallJson.x,allBallJson.y,0));
-	// }
-	// console.log( JSON.stringify(allBallJson));
-	//调用更新方法
 	for(var i = 0;i < Balls.length;i++){
 		Balls[i].doUpdate();
 	}
@@ -67,23 +49,6 @@ function mouseMove(ev) {
 	//获得中心点
 	x = mousePos.pos_x - document.body.clientWidth / 2;
 	y = mousePos.pos_y - document.body.clientHeight / 2;
-
-	// var mouseJson = {
-	// 	'x':x,
-	// 	'y':-y
-	// }
-	// var sendMessage = {
-	// 	'type':'mouse',
-	// 	'content':mouseJson
-	// }
-	// if(mouse_time >= 10){
-	// 	// websocket.send(JSON.stringify(sendMessage));
-	// 	mouse_time = 0;
-	// }
-
-	// websocket.send(JSON.stringify(sendMessage));
-
-	// console.log(JSON.stringify(sendMessage));
 }
 function sendMousePosition(){
 	var mouseJson = {
