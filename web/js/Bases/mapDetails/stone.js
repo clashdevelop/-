@@ -12,14 +12,14 @@ stone.prototype.draw = function(scene) {
 
 	// Create the cabin
 	var geomCockpit = new THREE.BoxGeometry(10,10,10,1,1,1);
-	var matCockpit = new THREE.MeshPhongMaterial({color:Colors.red, shading:THREE.FlatShading});
+	var matCockpit = new THREE.MeshPhongMaterial({color:Colors.blue, shading:THREE.FlatShading});
 	var cockpit = new THREE.Mesh(geomCockpit, matCockpit);
 	cockpit.castShadow = true;
 	cockpit.receiveShadow = true;
 
 	this.core.add(cockpit);
-	this.core.position.x = 10;
-	this.core.position.y = 10;
+	this.core.position.x = 30;
+	this.core.position.y = 30;
 	this.core.position.z = 0;
     scene.add(this.core);
 };
