@@ -1,6 +1,6 @@
 function camera(){
-    this.height = 60;
-    this.position = new position(0,0,60);
+    this.height = 100;
+    this.position = new position(0,0,0);
     this.lookAtPosition = new position(0,0,0);
     this.Camera ;//需要返回给renderer的变量
 }

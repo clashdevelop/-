@@ -1,6 +1,3 @@
-/*
-	
-*/
 function systemUpdate(time,receiveTime){
 
 	mouse_time++;
@@ -13,7 +10,6 @@ function systemUpdate(time,receiveTime){
 
     return time>=receiveTime?0:++time;
 }
-
 /*
 	小球更新控制方法
 	使用 allBallJson
@@ -32,6 +28,7 @@ function getBallById(id){
 	}
 	return resBall;
 }
+
 //鼠标更新事件
 document.onmousemove = mouseMove;
 function mousePosition(ev){

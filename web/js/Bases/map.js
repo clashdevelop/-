@@ -1,25 +1,3 @@
-function createMesh(geom, imageFile, normal) {
-    if (normal) {
-        var t = THREE.ImageUtils.loadTexture("../assets/textures/general/" + imageFile);
-        var m = THREE.ImageUtils.loadTexture("../assets/textures/general/" + normal);
-        var mat2 = new THREE.MeshPhongMaterial();
-        mat2.map = t;
-        mat2.normalMap = m;
-
-        var mesh = new THREE.Mesh(geom, mat2);
-        return mesh;
-    } else {
-        var t = THREE.ImageUtils.loadTexture("../assets/textures/general/" + imageFile);
-        var mat1 = new THREE.MeshPhongMaterial({
-            map: t
-        });
-        var mesh = new THREE.Mesh(geom, mat1);
-        return mesh;
-    }
-
-    return mesh;
-}
-
 function createNormalmapShaderMaterial(diffuseMap, normalMap) {
     var shader = THREE.ShaderLib["normalmap"];
     var uniforms = THREE.UniformsUtils.clone(shader.uniforms);
@@ -38,10 +16,10 @@ function createNormalmapShaderMaterial(diffuseMap, normalMap) {
     uniforms["enableSpecular"].value = true;
 
     return new THREE.ShaderMaterial(
-            {
-                fragmentShader: shader.fragmentShader,
-                vertexShader: shader.vertexShader,
-                uniforms: uniforms,
-                lights: true
-            });
+    {
+        fragmentShader: shader.fragmentShader,
+        vertexShader: shader.vertexShader,
+        uniforms: uniforms,
+        lights: true
+    });
 }

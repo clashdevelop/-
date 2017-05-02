@@ -12,7 +12,7 @@ function ball(){
     this.position = new position(0,0,0);//当前position
     this.nextPosition = new position(0,0,0);
     this.lastPosition = new position(0,0,0);
-    this.radius = 4;
+    this.radius = 5;
     //加的力
     this.power = 0;
     //用于对比是否为新加入或退出
@@ -23,7 +23,7 @@ function ball(){
     // this.rotaX = 1;
     // this.rotaY = 1;
     this.rotaXAY = {x:0.0,y:1.0};
-    this.xAxis;
+    this.xAxis = new THREE.Vector3(1,0,0);
 
 }
 (function(){
@@ -41,7 +41,6 @@ ball.prototype.moveToNext = function() {
     //同步本地next position
     this.usedTime++;
     var currectPosition = this.getCurrectTime();
-    console.log(currectPosition.x);
     if(this.position != this.nextPosition){
         
         this.position.x = currectPosition.x;
@@ -55,9 +54,19 @@ ball.prototype.moveToNext = function() {
         rotateAroundWorldAxis(this.core,this.xAxis,Math.PI / 360);
     }
 };
-//get / set
-ball.prototype.getPosition = function() {
-    return this.position;
+
+//更新服务器接收位置
+//改变lastPosition的记录
+//外加更新小球旋转角度
+//重置周期使用时间
+ball.prototype.setNextPosition = function(position) {
+    this.nextPosition = position;
+    this.lastPosition = this.position;
+
+    this.rotaXAY = this.getRotateXAY(this.position,this.nextPosition);
+    this.xAxis = new THREE.Vector3(this.rotaXAY.x,this.rotaXAY.y,0);
+
+    this.usedTime = 0;
 };
 ball.prototype.setPosition = function(position) {
     this.position = position;
@@ -65,6 +74,10 @@ ball.prototype.setPosition = function(position) {
     this.core.position.x = position.getX();
     this.core.position.y = position.getY();
     this.core.position.z = position.getZ();
+};
+//get / set
+ball.prototype.getPosition = function() {
+    return this.position;
 };
 ball.prototype.getPower = function() {
     return this.power;
@@ -86,33 +99,20 @@ ball.prototype.getCurrectTime = function() {
     var y = (this.nextPosition.y - this.lastPosition.y)*this.usedTime/this.cycleTime + this.lastPosition.y;
     return {'x':x,'y':y}
 };
-//更新服务器接收位置
-//改变lastPosition的记录
-//外加更新小球旋转角度
-//重置周期使用时间
-ball.prototype.setNextPosition = function(position) {
-    this.nextPosition = position;
-    this.lastPosition = this.position;
-    this.rotaXAY = this.getRotateXAY(this.position,this.nextPosition);
-    this.xAxis = new THREE.Vector3(this.rotaXAY.x,this.rotaXAY.y,0);
-
-    this.usedTime = 0;
-};
 ball.prototype.getNextPosition = function() {
     return this.nextPosition;
 };
 //添加到scene
 ball.prototype.draw = function(scene) {
-    this.geometry = new THREE.SphereGeometry(this.radius, 40, 40);
-    this.material = new THREE.MeshLambertMaterial({color: 0xd9d9d9});
-    //初始小球，没有纹理
-    // this.core = new THREE.Mesh(this.geometry,this.material);
-    // this.core.position.x = this.position.getX();
-    // this.core.position.y = this.position.getY();
-    // this.core.position.z = this.position.getZ();
-    // this.core.castShadow = true;
     //添加纹理的小球
-    this.core = createMesh(new THREE.SphereGeometry(this.radius, 40, 40), "floor-wood.jpg");
+    // this.core = this.createTextureMesh("floor-wood.jpg");
+    //自定义形状的小球
+    // this.core = this.createCustomMesh(testMesh,'',this.radius);
+    //红色暖系小球
+    this.core = this.createRedBallMesh(this.radius);
+
+
+    console.log("create ball succ!");
     scene.add(this.core);
 };
 
@@ -138,7 +138,6 @@ var rotWorldMatrix;
 function rotateAroundWorldAxis(object, axis, radians) {
     rotWorldMatrix = new THREE.Matrix4();
     rotWorldMatrix.makeRotationAxis(axis.normalize(), radians);
-
     // old code for Three.JS pre r54:
     //  rotWorldMatrix.multiply(object.matrix);
     // new code for Three.JS r55+:
@@ -172,5 +171,6 @@ ball.prototype.getRotateXAY = function(fromPosition,toPosition){
     }else{
         y2 = (fX - tX)*x2*1.0/(tY - fY);
     }
+    // console.log("x:"+x2+",y:"+y);
     return {x:x2,y:y2}
 }
