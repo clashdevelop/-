@@ -29,6 +29,7 @@ function changeAllBallNextPosition(){
 
 					Balls[oneBall].setNextPosition(new position(allBallJson[oneBallJson].x,allBallJson[oneBallJson].y,0));
 				}
+				
 			}
 			// getBallById(allBallJson[oneBallJson].id).setNextPosition(new position(allBallJson[oneBallJson].x,allBallJson[oneBallJson].y,0));
 		}
@@ -63,6 +64,11 @@ function changeAllBallNextPosition(){
 			readyLoop = true;
 		}else{
 			Balls[0].setNextPosition(new position(allBallJson.x,allBallJson.y,0));
+			if(testmouseput==1){
+				Balls[0].skill = "flash";
+				testmouseput=0;
+			}
+    		Balls[0].skill = "none";
 		}
 	}
 	//判断本地小球
@@ -76,7 +82,6 @@ function changeAllBallNextPosition(){
 			}
 		}
 	}
-	// console.log(JSON.stringify(allBallJson));
 }
 function getJsonFStr(str){
 	var res = str;

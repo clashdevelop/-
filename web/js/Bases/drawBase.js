@@ -16,6 +16,7 @@ drawBase.prototype.getCore = function() {
 drawBase.prototype.getPosition = function(){
     return this.position;
 };
+
 //传入已经定义的模型
 drawBase.prototype.createCustomMesh = function(mesh,texture,radius) {
     var mineMesh = mesh;
@@ -49,16 +50,12 @@ drawBase.prototype.createTextureMesh = function( imageFile, normal) {
 drawBase.prototype.createRedBallMesh = function(radius) {
     this.mesh = new THREE.Object3D();
     this.mesh.name = "airPlane";
-
     // Create the cabin
     var geomMainBall = new THREE.SphereGeometry(radius, 40, 40);
     var matMainBall = new THREE.MeshPhongMaterial({color:Colors.red, shading:THREE.FlatShading});
     var mainBall = new THREE.Mesh(geomMainBall, matMainBall);
     mainBall.castShadow = true;
     mainBall.receiveShadow = true;
-
     this.mesh.add(mainBall);
-
-    
     return this.mesh;
 }

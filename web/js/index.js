@@ -1,5 +1,4 @@
 function init(event){
-  // document.addEventListener('mousemove', mouseMove, false);
   createScene();
 
   meshLoad();
@@ -7,7 +6,10 @@ function init(event){
   createMouse();
   createAxes();
   loadBalls();
-  loadMap();
+  // 载入地图（当前只为石头）
+  // loadMap();
+  //载入粒子系统
+  createParticle();
 
   doConnect();
   
@@ -15,7 +17,6 @@ function init(event){
 }
 function loop(){
   if(readyLoop){
-    console.log("loop");
     time = systemUpdate(time,receiveTime);
   }
   renderer.render(scene,Camera.getCamera());

@@ -1,8 +1,12 @@
 function systemUpdate(time,receiveTime){
 
 	mouse_time++;
+	
 	sendMousePosition();
 	ballUpdate();
+	particleUpdate();
+
+
 	Camera.setLookAt(my_ball.getPosition());
     Camera.setPosition(my_ball.getPosition());
     //及时更改鼠标中心，将小球的位置传入
@@ -14,6 +18,30 @@ function systemUpdate(time,receiveTime){
 	小球更新控制方法
 	使用 allBallJson
 */
+document.onkeydown=function(event){
+    var e = event || window.event || arguments.callee.caller.arguments[0];
+    var sendNumber = -1;
+    if(e){ // 按 F2 
+    	switch(e.key){
+    		case'q' :
+    			sendNumber = 0;
+    			testmouseput = 1;
+    		break;
+    		case'w' :
+    			sendNumber = 1;
+    		break;
+    	}
+    	if(sendNumber == -1) return ;
+	    var keyboard = {
+			'key':sendNumber
+		}
+		var sendMessage = {
+			'type':'keyboard',
+			'content':keyboard
+		}
+		websocket.send(JSON.stringify(sendMessage));
+    }
+}; 
 function ballUpdate(){
 	for(var i = 0;i < Balls.length;i++){
 		Balls[i].doUpdate();
@@ -28,7 +56,26 @@ function getBallById(id){
 	}
 	return resBall;
 }
+// 粒子更新
+function particleUpdate(){
 
+	var pCount = particleCount;
+	while(pCount--) {
+		// 获取单个粒子
+		var particle = particles.vertices[pCount];
+		// 检查是否需要重置
+		particle.z -= particle.velocityZ;
+		if(particle.z < 0) {
+			particle.z = particlesHeight;
+		}
+		// 用随机数更新水平速度分量，并根据速度更新位置
+		particle.velocityY -= Math.random() * .1;
+		// particle.position.addSelf(velocityY);
+	}
+	// 告诉粒子系统我们改变了粒子位置
+	// particleSystem.geometry.__dirtyVertices = true;
+
+}
 //鼠标更新事件
 document.onmousemove = mouseMove;
 function mousePosition(ev){

@@ -1,6 +1,6 @@
-function camera(){
+function camera(ballPosi){
     this.height = 100;
-    this.position = new position(0,0,0);
+    this.position = ballPosi;
     this.lookAtPosition = new position(0,0,0);
     this.Camera ;//需要返回给renderer的变量
 }

@@ -4,14 +4,19 @@ function ball(){
     this.id = "0";
     this.name = "";
     this.color = "";
+    //技能效果
+    this.skill = "none";
 
     //每个周期所需跳数
-    this.cycleTime = 70;
-    this.usedTime = 0;
+    //也用于粒子效果的产生
+    this.cycleTime = 12;
+    this.usedTime = 1;
     //位置
-    this.position = new position(0,0,0);//当前position
-    this.nextPosition = new position(0,0,0);
-    this.lastPosition = new position(0,0,0);
+    this.position = new position(5,5,0);//当前position
+    this.nextPosition = new position(5,5,0);
+    this.lastPosition = new position(5,5,0);
+    this.currectPosition = new position(0,0,0);
+
     this.radius = 5;
     //加的力
     this.power = 0;
@@ -24,7 +29,9 @@ function ball(){
     // this.rotaY = 1;
     this.rotaXAY = {x:0.0,y:1.0};
     this.xAxis = new THREE.Vector3(1,0,0);
-
+    //粒子效果相关
+    this.particles;
+    this.particleSystem ;
 }
 (function(){
     var Super = function(){};
@@ -33,18 +40,39 @@ function ball(){
 })();
 //小球位置更新，不传递参数，通过自身的 nextposition 更改
 //小球的新position来自messageServer的新消息
+//更新小球的粒子效果
 ball.prototype.doUpdate = function() {
-    this.moveToNext();
+    switch(this.skill){
+        case "flash":
+            this.flashMove();
+        break;
+        
+        default:
+            this.normalMove();
+        break;
+
+    }
 };
 //运动方式1：向next position运动
+ball.prototype.normalMove = function() {
+    this.moveToNext();
+    // this.particleUpdate();
+};
+//运动方式2：闪现运动
+ball.prototype.flashMove = function() {
+    this.turnToNext();
+};
+
+
+//运动1
 ball.prototype.moveToNext = function() {
     //同步本地next position
     this.usedTime++;
-    var currectPosition = this.getCurrectTime();
+    this.currectPosition = this.getCurrectTime();
     if(this.position != this.nextPosition){
         
-        this.position.x = currectPosition.x;
-        this.position.y = currectPosition.y;
+        this.position.x = this.currectPosition.x;
+        this.position.y = this.currectPosition.y;
         this.position.z = 0;
         this.core.position.x = this.position.x;
         this.core.position.y = this.position.y;
@@ -53,6 +81,46 @@ ball.prototype.moveToNext = function() {
         //http://stackoverflow.com/questions/11060734/how-to-rotate-a-3d-object-on-axis-three-js
         rotateAroundWorldAxis(this.core,this.xAxis,Math.PI / 360);
     }
+};
+ball.prototype.particleUpdate = function() {
+    if(this.particleSystem==null) {
+        this.particleSystem = this.createParticle("snow",100);
+        return ;
+    }
+    var vertices = this.particleSystem.geometry.vertices;
+    for(var v in vertices){
+        vertices[v].z -= (vertices[v].velocityZ);
+        if (vertices[v].z <= 0) {
+            vertices[v].z = this.radius;
+            vertices[v].y = this.currectPosition.y;
+            vertices[v].x = this.currectPosition.x;
+        }
+    }
+};
+
+//运动2
+ball.prototype.turnToNext = function() {
+    // 效果？
+    var pointColor = "#ccffcc";
+    var pointLight = new THREE.PointLight(pointColor);
+    shadowLight.position.set(this.lastPosition.x, this.lastPosition.y, this.radius);
+    pointLight.distance = 100;
+    scene.add(pointLight);
+    
+    this.position.x = this.nextPosition.x;
+    this.position.y = this.nextPosition.y;
+    this.position.z = 0;
+
+    this.core.position.x = this.position.x;
+    this.core.position.y = this.position.y;
+    this.core.position.z = this.position.z;
+    console.log(this.position);
+    //网上找出的 矩阵旋转方案：
+    //http://stackoverflow.com/questions/11060734/how-to-rotate-a-3d-object-on-axis-three-js
+    rotateAroundWorldAxis(this.core,this.xAxis,Math.PI / 360);
+
+    Balls[0].skill = "none";
+
 };
 
 //更新服务器接收位置
@@ -66,8 +134,11 @@ ball.prototype.setNextPosition = function(position) {
     this.rotaXAY = this.getRotateXAY(this.position,this.nextPosition);
     this.xAxis = new THREE.Vector3(this.rotaXAY.x,this.rotaXAY.y,0);
 
-    this.usedTime = 0;
+    this.usedTime = 1;
+    //创建小球粒子
+    // this.particleUpdate();
 };
+
 ball.prototype.setPosition = function(position) {
     this.position = position;
     //初始化core.position
@@ -107,13 +178,49 @@ ball.prototype.draw = function(scene) {
     //添加纹理的小球
     // this.core = this.createTextureMesh("floor-wood.jpg");
     //自定义形状的小球
-    // this.core = this.createCustomMesh(testMesh,'',this.radius);
+    this.core = this.createCustomMesh(testMesh,'',this.radius);
     //红色暖系小球
-    this.core = this.createRedBallMesh(this.radius);
+    // this.core = this.createRedBallMesh(this.radius);
 
 
     console.log("create ball succ!");
     scene.add(this.core);
+};
+
+//创建小球的粒子效果,number 为粒子出现的数量
+ball.prototype.createParticle = function(type,number) {
+    var particleCount = number;
+    var particleSys,pMaterial,particlesHeight;
+    this.particles = new THREE.Geometry();
+    switch(type){
+        case "snow":
+            pMaterial = new THREE.ParticleBasicMaterial({
+                color: 0xFFFFFF,
+                size: 5,
+                map: THREE.ImageUtils.loadTexture("../assets/textures/particles/raindrop-2.png"),
+                blending: THREE.AdditiveBlending,
+                transparent: true
+            });
+        break;
+    }
+    for(var p = 0; p < particleCount; p++) {
+
+        var pX = (Math.random()*1 - 0.5) * this.currectPosition.x,
+            pY = (Math.random()*1 - 0.5) * this.currectPosition.x,
+            pZ = (Math.random()*1 - 0.5) * this.radius,
+        particle = new THREE.Vector3(pX, pY, pZ);
+        particle.velocityZ = 0.1;
+        particle.velocityX = 0;
+        particle.velocityY = 0;
+        // 将粒子加入粒子geometry
+        this.particles.vertices.push(particle);
+    }
+    particleSys = new THREE.ParticleSystem(
+        this.particles,
+        pMaterial);
+    particleSys.sortParticles = true;
+    scene.add(particleSys);
+    return particleSys;
 };
 
 var rotObjectMatrix;
