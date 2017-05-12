@@ -6,6 +6,8 @@ var Colors = {
     brownDark:0x23190f,
     blue:0x68c3c0,
 };
+var loadMeshSucc = false,connectWebSocketSucc = false;
+var logs = document.getElementById("logs");
 var backgroundColor = 0x68c3c0;
 
 var ambientLight, hemisphereLight, shadowLight;
@@ -64,12 +66,15 @@ function createScene(){
 }
 
 function loadBalls(){
+  logs.innerHTML="正在装载玩家<br />";
 	Balls = [];
 	Balls = new Array();
 	new_ball = new ball();
+  logs.innerHTML+="玩家登陆完毕<br />";
 }
 var stones;
 function loadMap(){
+  logs.innerHTML+="正在加载地图<br />";
   stones = new Array();
   for(var stone_i = 0;stone_i < 100;stone_i++){
       
@@ -79,6 +84,7 @@ function loadMap(){
   for(var stone_index in stones){
     stones[stone_index].draw(scene);
   }
+  logs.innerHTML+="加载地图完毕<br />";
 }
 
 

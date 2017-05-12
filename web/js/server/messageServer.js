@@ -13,62 +13,42 @@ function messageHandle(data){
 }
 function changeAllBallNextPosition(){
 	//更新每个小球的 nextposition
-	if(Array.isArray(allBallJson)){
-		//ball的flag清零
-		for(var oneBall in Balls){
-			Balls[oneBall].flag = 0;
-		}
-		for(var oneBallJson in allBallJson){
-			//获取数据包中ID号对应的小球下标
-			allBallJson[oneBallJson].flag = 0;
+	//ball的flag清零
+	for(var oneBall in Balls){
+		Balls[oneBall].flag = 0;
+	}
+	for(var oneBallJson in allBallJson){
+		//获取数据包中ID号对应的小球下标
+		allBallJson[oneBallJson].flag = 0;
 
-			for(var oneBall in Balls){
-				if(Balls[oneBall].getId() == ""+allBallJson[oneBallJson].id){
-					Balls[oneBall].flag = 1;
-					allBallJson[oneBallJson].flag = 1;
-
-					Balls[oneBall].setNextPosition(new position(allBallJson[oneBallJson].x,allBallJson[oneBallJson].y,0));
-				}
-				
-			}
-			// getBallById(allBallJson[oneBallJson].id).setNextPosition(new position(allBallJson[oneBallJson].x,allBallJson[oneBallJson].y,0));
-		}
-		//判断玩家退出事件
 		for(var oneBall in Balls){
-			var i = oneBall;
-			if(Balls[i].flag == 0){
-				//玩家退出
-				console.log("remove ball " + Balls[i].id);
-				scene.remove(Balls[i].core);
+			if(Balls[oneBall].getId() == ""+allBallJson[oneBallJson].id){
+				Balls[oneBall].flag = 1;
+				allBallJson[oneBallJson].flag = 1;
+
+				Balls[oneBall].setNextPosition(new position(allBallJson[oneBallJson].x,allBallJson[oneBallJson].y,0));
 			}
+			
 		}
-		//判断新玩家的加入
-		for(var oneBallJson in allBallJson){
-			if(allBallJson[oneBallJson].flag == 0){
-				console.log("add ball " + allBallJson[oneBallJson].id);
-				//加入玩家
-				var new_ball = new ball();
-				// new_ball.setRadius(1);
-				// my_ball = new_ball;
-				addNewBall(new_ball,allBallJson[oneBallJson].id);
-			}
+	}
+	//判断玩家退出事件
+	for(var oneBall in Balls){
+		var i = oneBall;
+		if(Balls[i].flag == 0){
+			//玩家退出
+			console.log("remove ball " + Balls[i].id);
+			scene.remove(Balls[i].core);
 		}
-	}else{
-		if(Balls.length == 0){
+	}
+	//判断新玩家的加入
+	for(var oneBallJson in allBallJson){
+		if(allBallJson[oneBallJson].flag == 0){
+			console.log("add ball " + allBallJson[oneBallJson].id);
+			//加入玩家
 			var new_ball = new ball();
 			// new_ball.setRadius(1);
 			// my_ball = new_ball;
-			addNewBall(new_ball,allBallJson.id);
-			//2017-5-2更改
-			// renderScene();
-			readyLoop = true;
-		}else{
-			Balls[0].setNextPosition(new position(allBallJson.x,allBallJson.y,0));
-			if(testmouseput==1){
-				Balls[0].skill = "flash";
-				testmouseput=0;
-			}
-    		Balls[0].skill = "none";
+			addNewBall(new_ball,allBallJson[oneBallJson].id);
 		}
 	}
 	//判断本地小球

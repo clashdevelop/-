@@ -10,7 +10,7 @@ function ball(){
     //每个周期所需跳数
     //也用于粒子效果的产生
     this.cycleTime = 12;
-    this.usedTime = 1;
+    this.usedTime = 0;
     //位置
     this.position = new position(5,5,0);//当前position
     this.nextPosition = new position(5,5,0);
@@ -50,7 +50,6 @@ ball.prototype.doUpdate = function() {
         default:
             this.normalMove();
         break;
-
     }
 };
 //运动方式1：向next position运动
@@ -62,7 +61,6 @@ ball.prototype.normalMove = function() {
 ball.prototype.flashMove = function() {
     this.turnToNext();
 };
-
 
 //运动1
 ball.prototype.moveToNext = function() {
@@ -128,13 +126,13 @@ ball.prototype.turnToNext = function() {
 //外加更新小球旋转角度
 //重置周期使用时间
 ball.prototype.setNextPosition = function(position) {
+    this.lastPosition = this.nextPosition;
     this.nextPosition = position;
-    this.lastPosition = this.position;
 
     this.rotaXAY = this.getRotateXAY(this.position,this.nextPosition);
     this.xAxis = new THREE.Vector3(this.rotaXAY.x,this.rotaXAY.y,0);
 
-    this.usedTime = 1;
+    this.usedTime = 0;
     //创建小球粒子
     // this.particleUpdate();
 };
@@ -166,8 +164,10 @@ ball.prototype.setId = function(id) {
     this.id = id;
 };
 ball.prototype.getCurrectTime = function() {
+    // console.log("cycleTime : "+this.cycleTime+" and usedTime : "+this.usedTime);
     var x = (this.nextPosition.x - this.lastPosition.x)*this.usedTime/this.cycleTime + this.lastPosition.x;
     var y = (this.nextPosition.y - this.lastPosition.y)*this.usedTime/this.cycleTime + this.lastPosition.y;
+    console.log((this.nextPosition.x - this.lastPosition.x)/this.cycleTime);
     return {'x':x,'y':y}
 };
 ball.prototype.getNextPosition = function() {
@@ -178,9 +178,9 @@ ball.prototype.draw = function(scene) {
     //添加纹理的小球
     // this.core = this.createTextureMesh("floor-wood.jpg");
     //自定义形状的小球
-    this.core = this.createCustomMesh(testMesh,'',this.radius);
+    // this.core = this.createCustomMesh(testMesh,'',this.radius);
     //红色暖系小球
-    // this.core = this.createRedBallMesh(this.radius);
+    this.core = this.createRedBallMesh(this.radius);
 
 
     console.log("create ball succ!");
